@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     String name;
 
-
+    @Inject
     List<Object> mkk;
 
     @Override

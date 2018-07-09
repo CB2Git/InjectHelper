@@ -42,18 +42,19 @@ public class TypeHelper {
             return InjectType.DOUBLE.ordinal();
         } else if (CommonClass.STRING.equals(typeMirror.toString())) {
             return InjectType.STRING.ordinal();
-        } else {
-            //Serializable object
-            TypeElement serializableType = Utilx.elements.getTypeElement(CommonClass.serializableName);
-            TypeElement parcelableType = Utilx.elements.getTypeElement(CommonClass.parcelableName);
-            if (Utilx.types.isSubtype(element.asType(), serializableType.asType())) {
-                return InjectType.SERIALIZABLE.ordinal();
-            } else if (Utilx.types.isSubtype(element.asType(), parcelableType.asType())) {
-                return InjectType.PARCELABLE.ordinal();
-            } else {
-
-            }
         }
+
+        TypeElement serializableType = Utilx.elements.getTypeElement(CommonClass.serializableName);
+        TypeElement parcelableType = Utilx.elements.getTypeElement(CommonClass.parcelableName);
+
+        //Serializable object
+        if (Utilx.types.isSubtype(element.asType(), serializableType.asType())) {
+            return InjectType.SERIALIZABLE.ordinal();
+        } else if (Utilx.types.isSubtype(element.asType(), parcelableType.asType())) {
+            return InjectType.PARCELABLE.ordinal();
+        }
+
+
         return InjectType.NONSUPPORT.ordinal();
     }
 }

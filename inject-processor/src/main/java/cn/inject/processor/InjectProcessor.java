@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -27,10 +26,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 
 import cn.inject.annotation.Inject;
 import cn.inject.processor.contract.CommonClass;
@@ -43,26 +39,17 @@ import cn.inject.processor.utils.Utilx;
 @SupportedAnnotationTypes({"cn.inject.annotation.Inject"})
 public class InjectProcessor extends AbstractProcessor {
 
-    private Filer mFiler;
-
-    private Elements mElementUtils;
-
-    private Types mTypeUtils;
-
     private Map<TypeElement, List<VariableElement>> parentAndChild = new HashMap<>();
 
     //initial some tools
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
-        mElementUtils = processingEnvironment.getElementUtils();
-        mFiler = processingEnvironment.getFiler();
-        mTypeUtils = processingEnvironment.getTypeUtils();
-        Utilx.elements = mElementUtils;
-        Utilx.filer = mFiler;
-        Utilx.types = mTypeUtils;
+        Utilx.elements = processingEnvironment.getElementUtils();
+        Utilx.filer = processingEnvironment.getFiler();
+        Utilx.types = processingEnvironment.getTypeUtils();
         Utilx.messager = processingEnvironment.getMessager();
-        TypeHelper.mElements = mElementUtils;
+        TypeHelper.mElements = Utilx.elements;
     }
 
     //Annotation Processing
@@ -150,7 +137,8 @@ public class InjectProcessor extends AbstractProcessor {
             if (codeBlock == null) {
                 String clsName = item.getEnclosingElement().asType().toString();
                 String name = item.toString();
-                Log.e(clsName + "#" + name + " UN SUPPORT TYPE: " + item.asType().toString());
+                Log.i(item.asType().getKind().toString());
+                Log.e(clsName + "#" + name + " Unsupported types: " + item.asType().toString());
             } else {
                 injectSpec.addStatement(codeBlock);
             }
@@ -189,13 +177,13 @@ public class InjectProcessor extends AbstractProcessor {
                 .addMethod(injectSpec.build())
                 .addMethod(autoWire.build());
 
-        PackageElement packageElement = mElementUtils.getPackageOf(father);
+        PackageElement packageElement = Utilx.elements.getPackageOf(father);
 
         JavaFile javaFile = JavaFile.builder(packageElement.toString(), injectHelper.build())
                 .addFileComment("create by Inject")
                 .build();
         try {
-            javaFile.writeTo(mFiler);
+            javaFile.writeTo(Utilx.filer);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(e.getLocalizedMessage());
@@ -239,7 +227,7 @@ public class InjectProcessor extends AbstractProcessor {
         injectSpec.addStatement("$L.setArguments(bundle)", fatherName);
         injectSpec.addStatement("return $L", fatherName);
 
-        String activityName = downName(father.getSimpleName().toString());
+        String activityName = GenerateHelper.downName(father.getSimpleName().toString());
 
         //get from Bundle
         MethodSpec.Builder autoWire = MethodSpec
@@ -269,37 +257,31 @@ public class InjectProcessor extends AbstractProcessor {
                 .addMethod(injectSpec.build())
                 .addMethod(autoWire.build());
 
-        PackageElement packageElement = mElementUtils.getPackageOf(father);
+        PackageElement packageElement = Utilx.elements.getPackageOf(father);
 
         JavaFile javaFile = JavaFile.builder(packageElement.toString(), injectHelper.build())
                 .addFileComment("create by Inject")
                 .build();
         try {
-            javaFile.writeTo(mFiler);
+            javaFile.writeTo(Utilx.filer);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(e.getLocalizedMessage());
         }
     }
 
-    public String downName(String value) {
-        value = value.substring(0, 1).toLowerCase() + value.substring(1);
-        return value;
-    }
-
-
     private boolean isActivity(TypeMirror typeMirror) {
-        TypeMirror activityTypeMirror = mElementUtils.getTypeElement("android.app.Activity").asType();
-        return mTypeUtils.isSubtype(typeMirror, activityTypeMirror);
+        TypeMirror activityTypeMirror = Utilx.elements.getTypeElement("android.app.Activity").asType();
+        return Utilx.types.isSubtype(typeMirror, activityTypeMirror);
     }
 
     private boolean isFragment(TypeMirror typeMirror) {
-        TypeMirror activityTypeMirror = mElementUtils.getTypeElement("android.app.Fragment").asType();
-        return mTypeUtils.isSubtype(typeMirror, activityTypeMirror);
+        TypeMirror activityTypeMirror = Utilx.elements.getTypeElement("android.app.Fragment").asType();
+        return Utilx.types.isSubtype(typeMirror, activityTypeMirror);
     }
 
     private boolean isFragmentV4(TypeMirror typeMirror) {
-        TypeMirror activityTypeMirror = mElementUtils.getTypeElement("android.support.v4.app.Fragment").asType();
-        return mTypeUtils.isSubtype(typeMirror, activityTypeMirror);
+        TypeMirror activityTypeMirror = Utilx.elements.getTypeElement("android.support.v4.app.Fragment").asType();
+        return Utilx.types.isSubtype(typeMirror, activityTypeMirror);
     }
 }
