@@ -15,12 +15,11 @@ public class MainActivity extends AppCompatActivity {
     String name;
 
     @Inject
-    List<Object> mkk;
+    Byte[] mkk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 }

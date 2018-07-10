@@ -28,4 +28,25 @@ public class CommonClass {
     public static final String DOUBLE = LANG + ".Double";
     public static final String BOOLEAN = LANG + ".Boolean";
     public static final String STRING = LANG + ".String";
+
+    public static final String BYTE_OBJ_ARRAY = BYTE + "[]";
+    public static final String SHORT_OBJ_ARRAY = SHORT + "[]";
+    public static final String INT_OBJ_ARRAY = INT + "[]";
+    public static final String LONG_OBJ_ARRAY = LONG + "[]";
+    public static final String CHAR_OBJ_ARRAY = CHAR + "[]";
+    public static final String FLOAT_OBJ_ARRAY = FLOAT + "[]";
+    public static final String DOUBLE_OBJ_ARRAY = DOUBLE + "[]";
+    public static final String BOOLEAN_OBJ_ARRAY = BOOLEAN + "[]";
+    public static final String STRING_OBJ_ARRAY = STRING + "[]";
+
+    public static final String BOOLEAN_ARRAY = "boolean[]";
+    public static final String INT_ARRAY = "int[]";
+    public static final String BYTE_ARRAY = "byte[]";
+    public static final String SHORT_ARRAY = "short[]";
+    public static final String LONG_ARRAY = "long[]";
+    public static final String CHAR_ARRAY = "char[]";
+    public static final String FLOAT_ARRAY = "float[]";
+    public static final String DOUBLE_ARRAY = "double[]";
+
+
 }

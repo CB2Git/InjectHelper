@@ -36,6 +36,8 @@ public class GenerateHelper {
             typeStr = "Serializable";
         } else if (variableType == InjectType.PARCELABLE.ordinal()) {
             typeStr = "Parcelable";
+        } else if (variableType == InjectType.BYTE_ARRAY.ordinal()) {
+            typeStr = "ByteArray";
         } else {
             return null;
         }
@@ -50,7 +52,6 @@ public class GenerateHelper {
      * @return
      */
     public static CodeBlock getBundleParameter(VariableElement variableElement) {
-        k();
         int variableType = TypeHelper.changeType(variableElement);
         String variableName = variableElement.getSimpleName().toString();
         String parentName = variableElement.getEnclosingElement().getSimpleName().toString();
@@ -89,11 +90,6 @@ public class GenerateHelper {
                 .add("$L.$L = bundle.get$L($S,$L.$L)", downName(parentName), variableName, typeStr, variableName + "_inject_key", downName(parentName), variableName)
                 .build();
     }
-
-    public static void k(){
-
-    }
-
 
     public static String upName(String value) {
         value = value.substring(0, 1).toUpperCase() + value.substring(1);

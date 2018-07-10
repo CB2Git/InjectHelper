@@ -14,5 +14,14 @@ public enum InjectType {
     STRING,
     SERIALIZABLE,
     PARCELABLE,
+    BOOLEAN_ARRAY,
+    INT_ARRAY,
+    BYTE_ARRAY,
+    SHORT_ARRAY,
+    LONG_ARRAY,
+    CHAR_ARRAY,
+    FLOAT_ARRAY,
+    DOUBLE_ARRAY,
+    STRING_ARRAY,
     NONSUPPORT
 }
